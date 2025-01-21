@@ -6,7 +6,7 @@ import trabalhoFinal.ListaOrdenada;
 public class MatrizEncadeada {
     int nLinhas;
     int nColunas;
-    Elo[] linhas = new Elo[nLinhas];
+    Elo[] linhas/* = new Elo[nLinhas]*/;
 
     protected class Elo
 	{
@@ -57,7 +57,7 @@ public class MatrizEncadeada {
     public MatrizEncadeada(int nLinhas, int nColunas) {
         this.nLinhas = nLinhas;
         this.nColunas = nColunas;
-        //this.linhas = new ListaOrdenada[nLinhas];
+        /**/this.linhas = new Elo[nLinhas];
     }
 
     public MatrizEncadeada(int nLinhas, int nColunas, float esparsialidade) { //esparcialidade recebe um valor entre 0 e 1 
