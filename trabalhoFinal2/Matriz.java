@@ -67,17 +67,19 @@ public class Matriz {
     }
 
     //1
-    public void insere(int linha, int coluna, int valor){
-        if((linha < 0 || linha > nLinhas) || (coluna < 0) || coluna > nColunas) return;
+    public boolean insere(int linha, int coluna, int valor){
+        if((linha < 0 || linha > nLinhas) || (coluna < 0) || coluna > nColunas) return false;
 
         matriz[linha][coluna] = valor;
+        return true;
     }
 
     //2
-    public void remove(int linha, int coluna){
-        if((linha < 0 || linha > nLinhas) || (coluna < 0) || coluna > nColunas) return;
+    public boolean remove(int linha, int coluna){
+        if((linha < 0 || linha > nLinhas) || (coluna < 0) || coluna > nColunas) return false;
 
         matriz[linha][coluna] = 0;
+        return true;
     }
 
     //3
