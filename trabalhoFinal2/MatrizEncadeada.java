@@ -144,7 +144,8 @@ public class MatrizEncadeada {
         if((linha < 0 || linha > nLinhas) || (coluna < 0 || coluna > nColunas)) return false;
 
         //linhas[linha].remove(coluna); //remove(int chave) de ListaOrdenada
-        return removedor(coluna, linha);
+        removedor(coluna, linha);
+	return true; //se o elemento ja valia 0, ele continua sendo 0 e diz-se que a remocao foi um sucesso
     }
     private boolean removedor(int chave, int l)
 	{
