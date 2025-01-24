@@ -11,7 +11,7 @@ public class MatrizEncadeada {
     protected class Elo
 	{
 		protected int dado;
-        protected int chave;
+        	protected int chave;
 		protected Elo prox;
 		
 		public Elo()
@@ -29,17 +29,17 @@ public class MatrizEncadeada {
 
         public Elo(int chave, int dado)
 		{
-            this.chave = chave;
+            		this.chave = chave;
 			this.dado = dado;
 			prox = null;
 		}
 
-		public Elo(int chave, int dado, Elo prox)
-		{
-            this.chave = chave;
-			this.dado = dado;
-			this.prox = prox;
-		}
+		//public Elo(int chave, int dado, Elo prox)
+		//{
+            	//this.chave = chave;
+		//	this.dado = dado;
+		//	this.prox = prox;
+		//}
 
         //public Elo(Elo copia){
         //    this.chave = copia.chave;
@@ -58,6 +58,8 @@ public class MatrizEncadeada {
         this.nLinhas = nLinhas;
         this.nColunas = nColunas;
         /**/this.linhas = new Elo[nLinhas];
+	for(int i = 0; i < nLinhas; i++)
+		linhas[i] = null;
     }
 
     public MatrizEncadeada(int nLinhas, int nColunas, float esparsialidade) { //esparcialidade recebe um valor entre 0 e 1 
@@ -70,8 +72,8 @@ public class MatrizEncadeada {
 
         Random randomizador = new Random();
         for (int l = 0; l < nLinhas; l++) 
-            for (int c = nColunas; c > 0; c++) {
-                if(nElementosNulos != 0 && (nElementosNaoNulos == 0 || randomizador.nextInt(100) < 60)) 
+            for (int c = nColunas; c > 0; c--) {
+                if(nElementosNulos != 0 && (randomizador.nextInt(100) < 60 || nElementosNaoNulos == 0)) 
                     nElementosNulos--;                
                 else {
                     nElementosNaoNulos--;
@@ -87,7 +89,7 @@ public class MatrizEncadeada {
         this.nColunas = nColunas;
         
         for (int l = 0; l < nLinhas; l++) 
-            for(int c = nColunas; c > 0; c--){
+            for(int c = nColunas--; c >= 0; c--){
                 int valor = matriz[l][c];
                 if(valor != 0){
                     Elo p = new Elo(c, valor);
@@ -225,9 +227,14 @@ public class MatrizEncadeada {
 
     //7
     public boolean isDiagonal(){
-        for (int l = 0; l < nLinhas; l++) 
-            if(linhas[l]/*.prim*/.chave != l) return false;
-        return true;
+	boolean is1DiagonalComElemento = false;
+	for (int l = 0; l < nLinhas; l++){
+		if(linhas[l]/*.prim*/ != null){
+			if(linhas[l]/*.prim*/.chave == l) is1DiagonalComElemento = true;
+			else return false;
+		}
+	}
+	return is1DiagonalComElemento;
     }
 
     //8
@@ -284,7 +291,7 @@ public class MatrizEncadeada {
             Elo p = linhas[l]/*.prim*/;
             while(p != null){                
                 if(p.chave < l) return false; //para ser triangular superior, tem-se que c >= l
-                p = p.prox;
+             go   p = p.prox;
                 isNaoVazia = true;
             }
         }
@@ -343,7 +350,7 @@ public class MatrizEncadeada {
         MatrizEncadeada matrizProduto = new MatrizEncadeada(nLinhas, nLinhas);
         
         for(int l = 0; l < nLinhas; l++) //percorre-se as nLinhas de A
-            for(int bLT = nLinhas; bLT > 0; bLT--){ //para cada nLinha de A compara-se a uma nColuna de B (que tem o mesmo total que as nLinhas de A)
+            for(int bLT = nLinhas--; bLT >= 0; bLT--){ //para cada nLinha de A compara-se a uma nColuna de B (que tem o mesmo total que as nLinhas de A)
                 Elo eloA = linhas[l]/*.prim*/; //tera posicao Alx, sendo x = prim
                 Elo eloBT = matrizBTransposta.linhas[bLT]/*.prim*/; //tera posicao Bxlt, sendo x = prim de bT
                 int valorProduto = 0; //Alx por Bxlt, Alx por Bxlt+1, Alx por Bxlt+2, ... Alx por Bxlt+nLinhas, Al+1x por Bxlt, Al+1x por Bxlt, ... Al+nLinhasx por Bxlt+nLinhas,
@@ -366,8 +373,9 @@ public class MatrizEncadeada {
     public MatrizEncadeada obterTransposta(){ 
         MatrizEncadeada matrizCopia = new MatrizEncadeada(nLinhas, nColunas, linhas);
         MatrizEncadeada matrizTransposta = new MatrizEncadeada(nColunas, nLinhas);
+	    
     
-        for(int lT = 0; lT < nColunas; lT++)
+        for(int lT = 0; lT < matrizTransposta.nLinhas; lT++)
             for(int l = nLinhas; l > 0; l--){
                 Elo primLCopia = matrizCopia.linhas[l]/*.prim*/;
                 if(primLCopia != null && primLCopia.chave == l){ //Lt(k, x) = x =Apos percorrer e adicionar todos os c = x> Lt(k, x + 1) = x + 1;    ; Lt(k, x) = x + 1 NÃO EXISTE;    ;Lt(k, x + 1) = x =Apos percorrer e adicionar todos os c = x> Lt(k, x + 1) = x +1         Considerando que lT = x: Se c vale x; adiciona esse c e o progride ao c = x+1 e vai ao proximo c. Se c vale x + 1, nao o progride . Se todos os c forem analisados progride-se ao lT = x + 1
