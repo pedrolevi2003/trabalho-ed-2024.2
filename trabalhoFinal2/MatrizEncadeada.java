@@ -8,6 +8,9 @@ public class MatrizEncadeada {
     int nColunas;
     Elo[] linhas/* = new Elo[nLinhas]*/;
 
+
+	
+
     protected class Elo
 	{
 		protected int dado;
@@ -73,7 +76,7 @@ public class MatrizEncadeada {
         Random randomizador = new Random();
         for (int l = 0; l < nLinhas; l++) 
             for (int c = nColunas; c > 0; c--) {
-                if(nElementosNulos != 0 && (randomizador.nextInt(100) < 60 || nElementosNaoNulos == 0)) 
+                if(nElementosNulos != 0 && (randomizador.nextInt(100) < (esparsialidade * 100) || nElementosNaoNulos == 0)) 
                     nElementosNulos--;                
                 else {
                     nElementosNaoNulos--;
@@ -195,10 +198,12 @@ public class MatrizEncadeada {
 	}
 
     //4
-    public void imprime(){
+    public void imprime(){ 
         for(int l = 0; l < nLinhas; l++)  {
             String impressaoLinha = "";
             Elo p = linhas[l]/*.prim*/;
+		
+
             for (int c = 0; c < nColunas; c++) {
                 if(p == null || c != p.chave)
                     impressaoLinha += "0 ";
