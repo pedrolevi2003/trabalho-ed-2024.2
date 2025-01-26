@@ -7,7 +7,11 @@ public class MatrizEncadeada {
     int nLinhas;
     int nColunas;
     Elo[] linhas/* = new Elo[nLinhas]*/;
+	//linhas[0] = LISTA{1, 2, 3, 5, null}  //lista.prim
+	//linhas[1] = LISTA{2, 3, 7, null}
 
+	//linhas[0] = {1}    -> 2 -> 3 -> 5 -> null   //linhas[0].prox
+	//linhas[1] = {2}    -> 3 -> 7 -> null
 
 	
 
@@ -229,18 +233,30 @@ public class MatrizEncadeada {
             if(linhas[l]/*.prim*/ != null) return false;            
         return true;
     }
-
-    //7
+	
+	//7
     public boolean isDiagonal(){
 	boolean is1DiagonalComElemento = false;
 	for (int l = 0; l < nLinhas; l++){
 		if(linhas[l]/*.prim*/ != null){
-			if(linhas[l]/*.prim*/.chave == l) is1DiagonalComElemento = true;
+			if(linhas[l]/*prim*/.prox == null && linhas[l]/*.prim*/.chave == l) is1DiagonalComElemento = true;
 			else return false;
 		}
 	}
 	return is1DiagonalComElemento;
     }
+	//1, 2, 3
+	//0, 0, 0
+	//0, 0, 0
+
+	//0, 0, 0
+	//0, 0, 6
+	//0, 0, 0
+
+	//null
+	//null
+	//6, null
+	//null
 
     //8
     public boolean isLinha(){
@@ -255,6 +271,18 @@ public class MatrizEncadeada {
         }
         return is1LinhaComElemento;
     }
+	//1- Ver se a linha possui apenas um elemento (prim.prox == null)
+	//2- Armazenar  a coluna do primeiro elemento não nulo e compará-la com a dos demais
+//int c = prim.coluna
+	//0, 2, 0
+	//0, 5, 0
+	//0, 8, 0
+
+	//null
+	//null
+	//null
+	//null
+	//null
 
     //9
     public boolean isColuna(){
@@ -272,6 +300,18 @@ public class MatrizEncadeada {
         }
         return colunaComElemento != -1;
     }
+	//diagonal: linha = coluna
+	//inferior: linha >= coluna ---- ! linha < coluna
+
+	
+	//1, 0, 0
+	//0, 2, 0
+	//0, 0, 9
+	
+	//1
+	//5, null
+	//9
+	
     
     //10
     public boolean isTriangularInferior(){
@@ -281,8 +321,9 @@ public class MatrizEncadeada {
             Elo p = linhas[l]/*.prim*/;
             while(p != null){                
                 if(p.chave > l) return false; //para ser triangular inferior, tem-se que c <= l
-                p = p.prox;
-                isNaoVazia = true;
+                if(p.chave < l) isNaoVazia = true;
+		p = p.prox;
+		
             }
         }
         return isNaoVazia;
@@ -294,13 +335,13 @@ public class MatrizEncadeada {
 
         for (int l = 0; l < nLinhas; l++) {
             Elo p = linhas[l]/*.prim*/;
-            while(p != null){                
-                if(p.chave < l) return false; //para ser triangular superior, tem-se que c >= l
-             go   p = p.prox;
-                isNaoVazia = true;
-            }
-        }
-        return isNaoVazia;
+		if(p != null)
+		{
+			if(p.chave < l) return false;
+			if(p.chave > l || (p.chave == l && p.prox != null)) isNaoVazia = true;
+		}
+	}
+	    return isNaoVazia;
     }
 
     //12
