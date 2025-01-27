@@ -130,40 +130,56 @@ public class Matriz {
     }
 
     //8
-    public boolean isLinha(){
-        boolean is1LinhaComElemento = false;
+    public boolean isLinha() {
+        int linhaComElementos = -1; 
 
-        for (int l = 0; l < nLinhas; l++)
-            for (int c = 0; c < nColunas; c++) 
-                if(matriz[l][c] != 0) {
-                    if(!is1LinhaComElemento){
-                        is1LinhaComElemento = true;
-                        c = 0;
-                        l++;
-                    } 
-                    else
-                        return false;
-                }        
-        return is1LinhaComElemento;
+        for (int l = 0; l < nLinhas; l++) {
+            boolean linhaTemElementos = false;
+
+            for (int c = 0; c < nColunas; c++) {
+                if (matriz[l][c] != 0) {
+                    linhaTemElementos = true;
+                    break;
+                }
+            }
+
+            if (linhaTemElementos) {
+                if (linhaComElementos == -1) {
+                    linhaComElementos = l; 
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        
+        return linhaComElementos != -1;
     }
 
     //9
-    public boolean isColuna(){
-        boolean is1ColunaComElemento = false;
+    public boolean isColuna() {
+        int colunaComElementos = -1; 
 
-        for (int c = 0; c < nColunas; c++)
+        for (int c = 0; c < nColunas; c++) {
+            boolean colunaTemElementos = false;
+
             for (int l = 0; l < nLinhas; l++) {
-                if(matriz[l][c] != 0) {
-                    if(!is1ColunaComElemento) {
-                        is1ColunaComElemento = true;
-                        l = 0;
-                        c++;
-                    }
-                    else
-                        return false;
+                if (matriz[l][c] != 0) {
+                    colunaTemElementos = true;
+                    break;
                 }
             }
-        return is1ColunaComElemento;
+
+            if (colunaTemElementos) {
+                if (colunaComElementos == -1) {
+                    colunaComElementos = c; 
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return colunaComElementos != -1;
     }
 
     //10
@@ -174,8 +190,10 @@ public class Matriz {
             for (int c = 0; c < nColunas; c++) {
                 if(matriz[l][c] != 0){
                     if(l >= c){
-                        isElementosabaixoDiagonal = true;
+                        if(l > c)
+                            isElementosabaixoDiagonal = true;
                     }
+                    
                     else 
                         return false;
                 }                                        
@@ -191,15 +209,17 @@ public class Matriz {
             for (int c = 0; c < nColunas; c++) {
                 if(matriz[l][c] != 0){
                     if(l <= c){
-                        isElementosacimaDiagonal = true;
+                        if(l < c)
+                            isElementosacimaDiagonal = true;
                     }
+                    
                     else 
                         return false;
                 }                                        
             }
         return isElementosacimaDiagonal;
     }
-
+    
     //12
     public boolean isSimetrica(){
         for (int l = 0; l < nLinhas; l++)
