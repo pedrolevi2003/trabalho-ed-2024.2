@@ -202,11 +202,11 @@ public class MatrizEncadeada {
 		for(p = linhas[l]; p != null; p = p.prox)
 		{
 			if(p.chave == chave) return p.dado;
-			if(p.chave > chave) return null;
+			if(p.chave > chave) return 0;
 
 		}
 		
-		return null;
+		return 0;
 	}
 
     //4
