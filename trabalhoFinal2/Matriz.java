@@ -37,7 +37,7 @@ public class Matriz {
                 }
                 else {
                     nElementosNaoNulos--;
-                    matriz[l][c] = randomizador.nextInt(99) + 1;
+                    matriz[l][c] = randomizador.nextInt(100) + 1;
                 }
             }
     }
@@ -265,7 +265,7 @@ public class Matriz {
         
         t0 = System.currentTimeMillis();		
         for (int i = 0; i < 10; i++) 
-            matriz.insere(randomizador.nextInt(nLinhas - 1), randomizador.nextInt(nColunas - 1), randomizador.nextInt(99) + 1);
+            matriz.insere(randomizador.nextInt(nLinhas - 1), randomizador.nextInt(nColunas - 1), randomizador.nextInt(100) + 1);
         t1 = System.currentTimeMillis();		
         tF = (t1 - t0) / 10;
         System.out.println("Insere " + nLinhas+"x"+nLinhas+ "   " + tF);
