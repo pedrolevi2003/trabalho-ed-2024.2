@@ -72,15 +72,18 @@ public class MatrizEncadeada {
     public MatrizEncadeada(int nLinhas, int nColunas, float esparsialidade) { //esparcialidade recebe um valor entre 0 e 1 
         this.nLinhas = nLinhas;
         this.nColunas = nColunas;
+        linhas = new Elo[nLinhas];
+
+
         
         int nElementos = nLinhas * nColunas;
         int nElementosNulos = (int) (nElementos * esparsialidade);
-        int nElementosNaoNulos =  nElementos = nElementosNulos;
+        int nElementosNaoNulos = nElementos - nElementosNulos;
 
         Random randomizador = new Random();
         for (int l = 0; l < nLinhas; l++) 
-            for (int c = nColunas; c > 0; c--) {
-                if(nElementosNulos != 0 && (randomizador.nextInt(100) < (esparsialidade * 100) || nElementosNaoNulos == 0)) 
+            for (int c = nColunas - 1; c >= 0; c--) {
+                if(nElementosNulos != 0 && (nElementosNaoNulos == 0 || randomizador.nextInt(100) < (esparsialidade * 100))) 
                     nElementosNulos--;                
                 else {
                     nElementosNaoNulos--;
@@ -96,7 +99,7 @@ public class MatrizEncadeada {
         this.nColunas = nColunas;
         
         for (int l = 0; l < nLinhas; l++) 
-            for(int c = nColunas--; c >= 0; c--){
+            for(int c = nColunas - 1; c >= 0; c--){
                 int valor = matriz[l][c];
                 if(valor != 0){
                     Elo p = new Elo(c, valor);
@@ -109,7 +112,10 @@ public class MatrizEncadeada {
     public MatrizEncadeada(int nLinhas, int nColunas, Elo[] linhas) {
         this.nLinhas = nLinhas;
         this.nColunas = nColunas;
-        this.linhas = linhas;
+        this.linhas = new Elo[nLinhas];
+        //this.linhas = linhas;
+        for (int l = 0; l < linhas.length; l++) 
+            this.linhas[l] = linhas[l];
     }
 
 
@@ -117,6 +123,8 @@ public class MatrizEncadeada {
     //1
     public boolean insere(int linha, int coluna, int valor){
         if((linha < 0 || linha > nLinhas) || (coluna < 0 || coluna > nColunas)) return false;
+
+        if(valor == 0) return remove(linha, coluna);
 
         //linhas[linha].insere(new Elo(coluna, valor)); //insere(Elo novo) de ListaOrdenada
         inseridor(new Elo(coluna, valor), linha);
@@ -383,46 +391,50 @@ public class MatrizEncadeada {
         return matrizSoma;        
     }
     private Elo obterSomaLinha(Elo eloA, Elo eloB){
-        if(eloA == null && eloB == null) return null;
-        	Elo p = null;
-	else{
+        Elo p = null; 
+        if(eloA == null && eloB == null) {return null;}
 
-        if(eloA == null) { p = new Elo(eloB.chave, eloB.dado, obterSomaLinha(null, eloB.prox)); } else{
+        if(eloA == null) { p = new Elo(eloB.chave, eloB.dado); p.prox = obterSomaLinha(null, eloB.prox); return p; } 
 	    
-        if(eloB == null) { p = new Elo(eloA.chave, eloA.dado, obterSomaLinha(eloA.prox, null)); } else{
+        if(eloB == null) { p = new Elo(eloA.chave, eloA.dado); p.prox = obterSomaLinha(eloA.prox, null); return p; } 
 	
 		    
 
-        if(eloA.chave < eloB.chave) { p = new Elo(eloA.chave, eloA.dado, obterSomaLinha(eloA.prox, eloB)); }else{
+        if(eloA.chave < eloB.chave) { p = new Elo(eloA.chave, eloA.dado); p.prox = obterSomaLinha(eloA.prox, eloB); return p; }
         if(eloA.chave == eloB.chave) {
-		if(eloA.dado + eloB.dado != 0)
-			p = new Elo(eloA.chave, eloA.dado + eloB.dado, obterSomaLinha(eloA.prox, eloB.prox)); 
-		else
-			p = obterSomaLinha(eloA.prox, eloB.prox);
-	} else{
-        if(eloA.chave > eloB.chave) { p = new Elo(eloB.chave, eloB.dado, obterSomaLinha(eloA, eloB.prox)); }}}}}}
-	
+		    if(eloA.dado + eloB.dado != 0) { p = new Elo(eloA.chave/* || eloB.chave*/, eloA.dado + eloB.dado); p.prox = obterSomaLinha(eloA.prox, eloB.prox); return p; }
+		    else { return obterSomaLinha(eloA.prox, eloB.prox); }
+	    } 
+        if(eloA.chave > eloB.chave) { p = new Elo(eloB.chave, eloB.dado); p.prox = obterSomaLinha(eloA, eloB.prox); return p; }
 
         return p;
     }
 
-    //14
+    //14 
     public MatrizEncadeada obterProduto(MatrizEncadeada matrizB){
         if(nColunas != matrizB.nLinhas) return null;
 
         MatrizEncadeada matrizBTransposta = matrizB.obterTransposta();
-        MatrizEncadeada matrizProduto = new MatrizEncadeada(nLinhas, nLinhas);
+        MatrizEncadeada matrizProduto = new MatrizEncadeada(nLinhas, matrizB.nColunas);
         
         for(int l = 0; l < nLinhas; l++) //percorre-se as nLinhas de A
-            for(int bLT = nLinhas--; bLT >= 0; bLT--){ //para cada nLinha de A compara-se a uma nColuna de B (que tem o mesmo total que as nLinhas de A)
-                Elo eloA = linhas[l]/*.prim*/; //tera posicao Alx, sendo x = prim
-                Elo eloBT = matrizBTransposta.linhas[bLT]/*.prim*/; //tera posicao Bxlt, sendo x = prim de bT
-                int valorProduto = 0; //Alx por Bxlt, Alx por Bxlt+1, Alx por Bxlt+2, ... Alx por Bxlt+nLinhas, Al+1x por Bxlt, Al+1x por Bxlt, ... Al+nLinhasx por Bxlt+nLinhas,
-                while(eloA != null || eloBT != null){ //produto = cA * lB sendo cA = lB => produto = cA * ctB sendo cA = ctB
-                    if(eloA.chave <= eloBT.chave) eloA = eloA.prox;
-                    if(eloA.chave == eloBT.chave) valorProduto += eloA.dado * eloBT.dado;
-                    if(eloA.chave >= eloBT.chave) eloBT = eloBT.prox;
-                }
+            for(int bLT = nLinhas - 1; bLT >= 0; bLT--){ //para cada nLinha de A compara-se a uma nColuna de B (que tem o mesmo total que as nLinhas de A)
+                Elo eloA = linhas[l]; // ter posição Alx
+                Elo eloBT = matrizBTransposta.linhas[bLT]; // ter posição Bxlt
+
+                int valorProduto = 0; // Acumulando o produto escalar
+
+                while (eloA != null && eloBT != null) { //produto = cA * lB sendo cA = lB => produto = cA * ctB sendo cA = ctB
+                if (eloA.chave == eloBT.chave) { // Se as chaves forem iguais, adiciona o produto dos dados                
+                    valorProduto += eloA.dado * eloBT.dado;
+                    eloA = eloA.prox; // Avança em eloA
+                    eloBT = eloBT.prox; // Avança em eloBT
+                } else if (eloA.chave < eloBT.chave) { // Se chave de eloA for menor, avança em eloA                    
+                    eloA = eloA.prox;
+                } else { // Se chave de eloBT for menor, avança em eloBT                    
+                    eloBT = eloBT.prox;
+    }
+}
                 if(valorProduto != 0) {
                     Elo p = new Elo(bLT, valorProduto);
                     p.prox = matrizProduto.linhas[l]/*.prim*/;
@@ -480,7 +492,7 @@ public class MatrizEncadeada {
         MatrizEncadeada matrizTransposta = new MatrizEncadeada(nColunas, nLinhas);
     
         for(int lT = 0; lT < matrizTransposta.nLinhas; lT++)
-            for(int l = nLinhas; l > 0; l--){
+            for(int l = nLinhas - 1; l >= 0; l--){
                 Elo primLCopia = matrizCopia.linhas[l]/*.prim*/;
                 if(primLCopia != null && primLCopia.chave == lT/**/){ //Lt(k, x) = x =Apos percorrer e adicionar todos os c = x> Lt(k, x + 1) = x + 1;    ; Lt(k, x) = x + 1 NÃO EXISTE;    ;Lt(k, x + 1) = x =Apos percorrer e adicionar todos os c = x> Lt(k, x + 1) = x +1         Considerando que lT = x: Se c vale x; adiciona esse c e o progride ao c = x+1 e vai ao proximo c. Se c vale x + 1, nao o progride . Se todos os c forem analisados progride-se ao lT = x + 1
                     Elo p = new Elo(l, primLCopia.dado);
@@ -508,12 +520,16 @@ public class MatrizEncadeada {
 
     public void testarInsere(int nLinhas){
         Random randomizador = new Random();
+	int linhaDesejada = randomizador.nextInt(nLinhas - 1);
+	int colunaDesejada = randomizador.nextInt(nLinhas - 1);
+	int valorInserido = randomizador.nextInt(99) + 1;
+	    
         Long t0, t1, tF;
         MatrizEncadeada matrizEncadeada = new MatrizEncadeada(nLinhas, nLinhas, 0.6f);
         
         t0 = System.currentTimeMillis();		
         for (int i = 0; i < 10; i++) 
-            matrizEncadeada.insere(randomizador.nextInt(nLinhas - 1), randomizador.nextInt(nLinhas - 1), randomizador.nextInt(99) + 1);
+            matrizEncadeada.insere(linhaDesejada, colunaDesejada, valorInserido);
         t1 = System.currentTimeMillis();		
         tF = (t1 - t0) / 10;
         System.out.println("Insere " + nLinhas+"x"+nLinhas+ "   " + tF);
@@ -521,12 +537,15 @@ public class MatrizEncadeada {
 
     public void testarRemove(int nLinhas){
         Random randomizador = new Random();
+	int linhaDesejada = randomizador.nextInt(nLinhas - 1);
+	int colunaDesejada = randomizador.nextInt(nLinhas - 1);
+	    
         Long t0, t1, tF;
         MatrizEncadeada matrizEncadeada = new MatrizEncadeada(nLinhas, nLinhas, 0.6f);
         
         t0 = System.currentTimeMillis();		
         for (int i = 0; i < 10; i++) 
-            matrizEncadeada.remove(randomizador.nextInt(nLinhas - 1), randomizador.nextInt(nLinhas - 1));
+            matrizEncadeada.remove(linhaDesejada, colunaDesejada);
         t1 = System.currentTimeMillis();		
         tF = (t1 - t0) / 10;
         System.out.println("Remove " + nLinhas+"x"+nLinhas+ "   " + tF);
@@ -534,12 +553,15 @@ public class MatrizEncadeada {
 
     public void testarBusca(int nLinhas){
         Random randomizador = new Random();
+	int linhaDesejada = randomizador.nextInt(nLinhas - 1);
+	int colunaDesejada = randomizador.nextInt(nLinhas - 1);
+	    
         Long t0, t1, tF;
         MatrizEncadeada matrizEncadeada = new MatrizEncadeada(nLinhas, nLinhas, 0.6f);
         
         t0 = System.currentTimeMillis();		
         for (int i = 0; i < 10; i++) 
-            matrizEncadeada.busca(randomizador.nextInt(nLinhas - 1), randomizador.nextInt(nLinhas - 1));
+            matrizEncadeada.busca(linhaDesejada, colunaDesejada);
         t1 = System.currentTimeMillis();		
         tF = (t1 - t0) / 10;
         System.out.println("Busca " + nLinhas+"x"+nLinhas+ "   " + tF);
