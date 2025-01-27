@@ -344,6 +344,14 @@ public class MatrizEncadeada {
 	    return isNaoVazia;
     }
 
+	// 1, 2, 3, null
+	//4, 5, 6, null
+	//7, 8, 9, null
+
+	// 1, 2, 3, null
+	//4, 5, 6, null
+	//7, 8, 10, null
+
     //12
     public boolean isSimetrica(){
         return isSimilar(obterTransposta());
@@ -376,14 +384,24 @@ public class MatrizEncadeada {
     }
     private Elo obterSomaLinha(Elo eloA, Elo eloB){
         if(eloA == null && eloB == null) return null;
-        Elo p = null;
+        	Elo p = null;
+	else{
 
-        if(eloA == null) { p = new Elo(eloB.chave, eloB.dado, obterSomaLinha(null, eloB.prox)); }
-        if(eloB == null) { p = new Elo(eloA.chave, eloA.dado, obterSomaLinha(eloA.prox, null)); }
+        if(eloA == null) { p = new Elo(eloB.chave, eloB.dado, obterSomaLinha(null, eloB.prox)); } else{
+	    
+        if(eloB == null) { p = new Elo(eloA.chave, eloA.dado, obterSomaLinha(eloA.prox, null)); } else{
+	
+		    
 
-        if(eloA.chave < eloB.chave) { p = new Elo(eloA.chave, eloA.dado, obterSomaLinha(eloA.prox, eloB)); }
-        if(eloA.chave == eloB.chave) { p = new Elo(eloA.chave, eloA.dado + eloB.dado, obterSomaLinha(eloA.prox, eloB.prox)); }
-        if(eloA.chave > eloB.chave) { p = new Elo(eloB.chave, eloB.dado, obterSomaLinha(eloA, eloB.prox)); }
+        if(eloA.chave < eloB.chave) { p = new Elo(eloA.chave, eloA.dado, obterSomaLinha(eloA.prox, eloB)); }else{
+        if(eloA.chave == eloB.chave) {
+		if(eloA.dado + eloB.dado != 0)
+			p = new Elo(eloA.chave, eloA.dado + eloB.dado, obterSomaLinha(eloA.prox, eloB.prox)); 
+		else
+			p = obterSomaLinha(eloA.prox, eloB.prox);
+	} else{
+        if(eloA.chave > eloB.chave) { p = new Elo(eloB.chave, eloB.dado, obterSomaLinha(eloA, eloB.prox)); }}}}}}
+	
 
         return p;
     }
@@ -414,17 +432,57 @@ public class MatrizEncadeada {
         
         return matrizProduto;
     }
+	//Original convencional
+	//1, 2, 3
+	//0, 5, 6
+	//7, 8, 9
+
+	//Transposta convencional
+	//1, 0, 7
+	//2, 5, 8
+	//3, 6, 9
+
+	// Para adicionar na linha 1 da trasposta 
+	//1- Pega o primeiro elemento da linha 1 da original
+	//2- Verifica se esse elemento tem sua coluna = 1
+	//3- Se tiver coluna = 1; adiciona esse elo na linha 1 transposta E apaga esse primeiro elemento da original(linhas[1] = linhas[1].prox)
+	//4- repete-se essa etapa na linha 2
+	
+	//Original encadeada
+	//3, null
+	//6, null
+	//7, 8, 9, null	
+
+	//Transposta encadeada
+	//null
+	//null
+	//null
+	
+	//1, 3, null
+	//4, 5, 6, null
+	//7, 8, 9, null
+
+	//2, 3, null
+	//4, o, 6, null
+	//7,8, 9, null
+
+	//null
+	//null
+	//null
+
+	//1
+	//1 -> 2 -> 3 -> null
+	//3 -> null
 
     //15
     public MatrizEncadeada obterTransposta(){ 
         MatrizEncadeada matrizCopia = new MatrizEncadeada(nLinhas, nColunas, linhas);
         MatrizEncadeada matrizTransposta = new MatrizEncadeada(nColunas, nLinhas);
-	    
     
         for(int lT = 0; lT < matrizTransposta.nLinhas; lT++)
             for(int l = nLinhas; l > 0; l--){
                 Elo primLCopia = matrizCopia.linhas[l]/*.prim*/;
-                if(primLCopia != null && primLCopia.chave == l){ //Lt(k, x) = x =Apos percorrer e adicionar todos os c = x> Lt(k, x + 1) = x + 1;    ; Lt(k, x) = x + 1 NÃO EXISTE;    ;Lt(k, x + 1) = x =Apos percorrer e adicionar todos os c = x> Lt(k, x + 1) = x +1         Considerando que lT = x: Se c vale x; adiciona esse c e o progride ao c = x+1 e vai ao proximo c. Se c vale x + 1, nao o progride . Se todos os c forem analisados progride-se ao lT = x + 1
+                if(primLCopia != null && primLCopia.chave == lT/**/){ //Lt(k, x) = x =Apos percorrer e adicionar todos os c = x> Lt(k, x + 1) = x + 1;    ; Lt(k, x) = x + 1 NÃO EXISTE;    ;Lt(k, x + 1) = x =Apos percorrer e adicionar todos os c = x> Lt(k, x + 1) = x +1         Considerando que lT = x: Se c vale x; adiciona esse c e o progride ao c = x+1 e vai ao proximo c. Se c vale x + 1, nao o progride . Se todos os c forem analisados progride-se ao lT = x + 1
                     Elo p = new Elo(l, primLCopia.dado);
                     p.prox = matrizTransposta.linhas[lT]/*.prim*/;
                     matrizTransposta.linhas[lT]/*.prim*/ = p;
