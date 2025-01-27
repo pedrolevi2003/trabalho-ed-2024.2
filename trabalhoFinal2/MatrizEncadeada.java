@@ -87,7 +87,7 @@ public class MatrizEncadeada {
                     nElementosNulos--;                
                 else {
                     nElementosNaoNulos--;
-                    Elo p = new Elo(c, randomizador.nextInt(99) + 1);
+                    Elo p = new Elo(c, (randomizador.nextInt(2) == 0? -1:1) * randomizador.nextInt(99) + 1);
                     p.prox = linhas[l]/*.prim*/;
                     linhas[l]/*.prim*/ = p;
                 }
@@ -122,7 +122,7 @@ public class MatrizEncadeada {
 
     //1
     public boolean insere(int linha, int coluna, int valor){
-        if((linha < 0 || linha > nLinhas) || (coluna < 0 || coluna > nColunas)) return false;
+        if((linha < 0 || linha > nLinhas - 1) || (coluna < 0 || coluna > nColunas - 1)) return false;
 
         if(valor == 0) return remove(linha, coluna);
 
@@ -158,7 +158,7 @@ public class MatrizEncadeada {
 
     //2
     public boolean remove(int linha, int coluna){
-        if((linha < 0 || linha > nLinhas) || (coluna < 0 || coluna > nColunas)) return false;
+        if((linha < 0 || linha > nLinhas - 1) || (coluna < 0 || coluna > nColunas - 1)) return false;
 
         //linhas[linha].remove(coluna); //remove(int chave) de ListaOrdenada
         removedor(coluna, linha);
@@ -190,7 +190,7 @@ public class MatrizEncadeada {
 
     //3
     public Integer busca(int linha, int coluna){
-        if((linha < 0 || linha > nLinhas) || (coluna < 0 || coluna > nColunas)) return null;
+        if((linha < 0 || linha > nLinhas - 1) || (coluna < 0 || coluna > nColunas - 1)) return null;
 
         //return linhas[linha].busca(coluna); //busca(int chave) de ListaOrdenada
         return buscador(coluna, linha);
