@@ -20,28 +20,30 @@ public class Matriz {
                 matriz[l][c] = 0;
     }
 
-    public Matriz(int nLinhas, int nColunas, float esparsialidade) { //esparcialidade recebe um valor entre 0 e 1 
+    public MatrizEncadeada(int nLinhas, int nColunas, float esparsialidade) { //esparcialidade recebe um valor entre 0 e 1 
         this.nLinhas = nLinhas;
         this.nColunas = nColunas;
+        linhas = new Elo[nLinhas];
+
+
         
         int nElementos = nLinhas * nColunas;
         int nElementosNulos = (int) (nElementos * esparsialidade);
-        int nElementosNaoNulos =  nElementos = nElementosNulos;
+        int nElementosNaoNulos = nElementos - nElementosNulos;
 
         Random randomizador = new Random();
         for (int l = 0; l < nLinhas; l++) 
-            for (int c = 0; c < nColunas; c++) {
-                if(nElementosNulos != 0 && (nElementosNaoNulos == 0 || randomizador.nextInt(100) < 60)) {
+            for (int c = nColunas - 1; c >= 0; c--) {
+                if(nElementosNulos != 0 && (nElementosNaoNulos == 0 || randomizador.nextInt(100) < (esparsialidade * 100))) 
                     nElementosNulos--;                
-                    matriz[l][c] = 0;
-                }
                 else {
                     nElementosNaoNulos--;
-                    matriz[l][c] = randomizador.nextInt(100) + 1;
+                    Elo p = new Elo(c, (randomizador.nextInt(2) == 0? -1:1) * randomizador.nextInt(99) + 1);
+                    p.prox = linhas[l]/*.prim*/;
+                    linhas[l]/*.prim*/ = p;
                 }
             }
     }
-
     /**/public Matriz(int nLinhas, int nColunas, MatrizEncadeada matrizEncadeada) {
         this.nLinhas = nLinhas;
         this.nColunas = nColunas;
