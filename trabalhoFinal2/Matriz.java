@@ -20,7 +20,7 @@ public class Matriz {
                 matriz[l][c] = 0;
     }
 
-    public MatrizEncadeada(int nLinhas, int nColunas, float esparsialidade) { //esparcialidade recebe um valor entre 0 e 1 
+    public Matriz(int nLinhas, int nColunas, float esparsialidade) { //esparcialidade recebe um valor entre 0 e 1 
         this.nLinhas = nLinhas;
         this.nColunas = nColunas;
         matriz = new int[nLinhas][nColunas];
