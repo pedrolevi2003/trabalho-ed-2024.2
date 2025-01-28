@@ -397,17 +397,16 @@ public class Matriz {
         System.out.println("isTriangSup " + nLinhas+"x"+nLinhas+ "   " + tF);
     }
 
-    public void testarIsSimetrica(int nLinhas){
+    public void testarIsSimetrica(){
         //Random randomizador = new Random();
         Long t0, t1, tF;
-        Matriz matriz = new Matriz(nLinhas, nLinhas, 0.6f);
 
         t0 = System.currentTimeMillis();		
         for (int i = 0; i < 10; i++) 
-            matriz.isSimetrica();
+            this.isSimetrica();
         t1 = System.currentTimeMillis();		
         tF = (t1 - t0) / 10;
-        System.out.println("isSimetrica " + nLinhas+"x"+nLinhas+ "   " + tF);
+        System.out.println("isSimetrica " + nLinhas+"x"+nColunas+ "   " + tF + "   " + this.isSimetrica());
     }
 
     public void testarObterSoma(int nLinhas){
