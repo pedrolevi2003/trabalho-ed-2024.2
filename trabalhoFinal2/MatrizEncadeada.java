@@ -87,7 +87,7 @@ public class MatrizEncadeada {
                     nElementosNulos--;                
                 else {
                     nElementosNaoNulos--;
-                    Elo p = new Elo(c, (randomizador.nextInt(2) == 0? -1:1) * randomizador.nextInt(99) + 1);
+                    Elo p = new Elo(c, (randomizador.nextInt(2) == 0? -1:1) * (randomizador.nextInt(99) + 1));
                     p.prox = linhas[l]/*.prim*/;
                     linhas[l]/*.prim*/ = p;
                 }
